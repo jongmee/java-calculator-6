@@ -1,11 +1,7 @@
 package com.wooteco.calculator;
 
-import static camp.nextstep.edu.missionutils.Console.readLine;
-
-import camp.nextstep.edu.missionutils.Console;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,12 +19,12 @@ public class CalculatorApplication {
     }
 
     //커스텀 구분자 찾기 메서드
-    public static String findCustomDelimiter(String text) {
-        Matcher m = Pattern.compile("//(.)\n(.*)").matcher(text);
+    public static List<String> findCustomDelimiter(String text) {
+        Matcher m = Pattern.compile("//(.)\\\\n(.*)").matcher(text);
         if (m.find()) {
-            return m.group(1);
+            return Arrays.asList(m.group(1), m.group(2));
         }
-        return "";
+        return Arrays.asList("", text);
     }
 
     //구분자로 문자열 분리 메서드
@@ -72,9 +68,10 @@ public class CalculatorApplication {
         if(isZeroValue) {
             System.out.println(0);
         }
-        String customDelimiter = findCustomDelimiter(input);
-        String separators = mergeDelimiter(customDelimiter);
-        String[] numbers = input.split(separators);
+        List<String> customDelimiter = findCustomDelimiter(input);
+        String separators = mergeDelimiter(customDelimiter.get(0));
+        String[] numbers = customDelimiter.get(1).split(separators);
 
+        System.out.println(sumNumbers(numbers));
     }
 }
